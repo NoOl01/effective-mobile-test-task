@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"github.com/google/uuid"
 	"strconv"
 	"testovoe/internal/handler/dto"
 	"testovoe/internal/utils"
@@ -29,7 +31,7 @@ func (s *service) SubscriptionsList() ([]dto.Subscription, error) {
 	return s.repo.SubscriptionsList(ctx)
 }
 
-func (s *service) SubscriptionsSum(startDate, endDate, userId, serviceName string) (int, error) {
+func (s *service) SubscriptionsSum(startDate, endDate string, userId uuid.UUID, serviceName string) (int, error) {
 	ctx := context.Background()
 
 	start, err := utils.FromStringToTime(startDate)
@@ -41,10 +43,14 @@ func (s *service) SubscriptionsSum(startDate, endDate, userId, serviceName strin
 		return 0, err
 	}
 
+	if end.Before(start) {
+		return 0, errors.New("the end_date cannot be less than the start_date")
+	}
+
 	return s.repo.SubscriptionsSum(ctx, start, end, userId, serviceName)
 }
 
-func (s *service) SubscriptionByUserId(userId string) ([]dto.Subscription, error) {
+func (s *service) SubscriptionByUserId(userId uuid.UUID) ([]dto.Subscription, error) {
 	ctx := context.Background()
 
 	return s.repo.SubscriptionByUserId(ctx, userId)

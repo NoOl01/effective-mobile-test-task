@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"log"
 	"testovoe/internal/errs"
 	"testovoe/internal/handler/dto"
@@ -62,12 +63,12 @@ func (r *repository) SubscriptionsList(ctx context.Context) ([]dto.Subscription,
 	return result, nil
 }
 
-func (r *repository) SubscriptionsSum(ctx context.Context, startDate, endDate time.Time, userId, serviceName string) (int, error) {
+func (r *repository) SubscriptionsSum(ctx context.Context, startDate, endDate time.Time, userId uuid.UUID, serviceName string) (int, error) {
 	query := queries.QueryCalculateSubscriptionCost
 	args := []interface{}{startDate, endDate}
 	paramCount := 2
 
-	if userId != "" {
+	if userId != uuid.Nil {
 		paramCount++
 		query += fmt.Sprintf(" AND user_id = $%d", paramCount)
 		args = append(args, userId)
@@ -87,7 +88,7 @@ func (r *repository) SubscriptionsSum(ctx context.Context, startDate, endDate ti
 	return result, nil
 }
 
-func (r *repository) SubscriptionByUserId(ctx context.Context, userId string) ([]dto.Subscription, error) {
+func (r *repository) SubscriptionByUserId(ctx context.Context, userId uuid.UUID) ([]dto.Subscription, error) {
 	var result []dto.Subscription
 
 	rows, err := r.pool.Query(ctx, queries.QueryGetSubscription, userId)

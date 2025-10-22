@@ -1,16 +1,19 @@
 package dto
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
 
 type CreateSubscription struct {
-	UserId      string `json:"user_id"`
-	ServiceName string `json:"service_name"`
-	Price       int    `json:"price"`
+	UserId      uuid.UUID `json:"user_id"`
+	ServiceName string    `json:"service_name"`
+	Price       int       `json:"price"`
 }
 
 type Subscription struct {
 	Id          int64     `json:"id"`
-	UserId      string    `json:"user_id"`
+	UserId      uuid.UUID `json:"user_id"`
 	ServiceName string    `json:"service_name"`
 	Price       int       `json:"price"`
 	StartDate   time.Time `json:"start_date"`
@@ -18,9 +21,9 @@ type Subscription struct {
 }
 
 type UpdateSubscription struct {
-	UserId      string `json:"user_id"`
-	ServiceName string `json:"service_name"`
-	Price       int    `json:"price"`
-	StartDate   string `json:"start_date"`
-	EndDate     string `json:"end_date"`
+	UserId      uuid.UUID `json:"user_id"`
+	ServiceName string    `json:"service_name"`
+	Price       int       `json:"price"`
+	StartDate   string    `json:"start_date"`
+	EndDate     string    `json:"end_date"`
 }
